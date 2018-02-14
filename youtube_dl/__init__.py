@@ -13,7 +13,7 @@ import sys
 
 
 from .options import (
-    parseOpts,
+    parse_opts,
 )
 from .compat import (
     compat_getpass,
@@ -55,7 +55,7 @@ def _real_main(argv=None):
 
     setproctitle('youtube-dl')
 
-    parser, opts, args = parseOpts(argv)
+    parser, opts, args = parse_opts(argv)
 
     # Set user agent
     if opts.user_agent is not None:

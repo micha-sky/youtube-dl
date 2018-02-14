@@ -38,8 +38,8 @@ def _hide_login_info(opts):
     return opts
 
 
-def parseOpts(overrideArguments=None):
-    def _readOptions(filename_bytes, default=[]):
+def parse_opts(override_arguments=None):
+    def _read_options(filename_bytes, default=[]):
         try:
             optionf = open(filename_bytes)
         except IOError:
@@ -54,42 +54,42 @@ def parseOpts(overrideArguments=None):
             optionf.close()
         return res
 
-    def _readUserConf():
+    def _read_user_conf():
         xdg_config_home = compat_getenv('XDG_CONFIG_HOME')
         if xdg_config_home:
-            userConfFile = os.path.join(xdg_config_home, 'youtube-dl', 'config')
-            if not os.path.isfile(userConfFile):
-                userConfFile = os.path.join(xdg_config_home, 'youtube-dl.conf')
+            user_conf_file = os.path.join(xdg_config_home, 'youtube-dl', 'config')
+            if not os.path.isfile(user_conf_file):
+                user_conf_file = os.path.join(xdg_config_home, 'youtube-dl.conf')
         else:
-            userConfFile = os.path.join(compat_expanduser('~'), '.config', 'youtube-dl', 'config')
-            if not os.path.isfile(userConfFile):
-                userConfFile = os.path.join(compat_expanduser('~'), '.config', 'youtube-dl.conf')
-        userConf = _readOptions(userConfFile, None)
+            user_conf_file = os.path.join(compat_expanduser('~'), '.config', 'youtube-dl', 'config')
+            if not os.path.isfile(user_conf_file):
+                user_conf_file = os.path.join(compat_expanduser('~'), '.config', 'youtube-dl.conf')
+        user_conf = _read_options(user_conf_file, None)
 
-        if userConf is None:
+        if user_conf is None:
             appdata_dir = compat_getenv('appdata')
             if appdata_dir:
-                userConf = _readOptions(
+                user_conf = _read_options(
                     os.path.join(appdata_dir, 'youtube-dl', 'config'),
                     default=None)
-                if userConf is None:
-                    userConf = _readOptions(
+                if user_conf is None:
+                    user_conf = _read_options(
                         os.path.join(appdata_dir, 'youtube-dl', 'config.txt'),
                         default=None)
 
-        if userConf is None:
-            userConf = _readOptions(
+        if user_conf is None:
+            user_conf = _read_options(
                 os.path.join(compat_expanduser('~'), 'youtube-dl.conf'),
                 default=None)
-        if userConf is None:
-            userConf = _readOptions(
+        if user_conf is None:
+            user_conf = _read_options(
                 os.path.join(compat_expanduser('~'), 'youtube-dl.conf.txt'),
                 default=None)
 
-        if userConf is None:
-            userConf = []
+        if user_conf is None:
+            user_conf = []
 
-        return userConf
+        return user_conf
 
     def _format_option_string(option):
         ''' ('-o', '--option') -> -o, --format METAVAR'''
@@ -869,10 +869,10 @@ def parseOpts(overrideArguments=None):
     parser.add_option_group(adobe_pass)
     parser.add_option_group(postproc)
 
-    if overrideArguments is not None:
-        opts, args = parser.parse_args(overrideArguments)
+    if override_arguments is not None:
+        opts, args = parser.parse_args(override_arguments)
         if opts.verbose:
-            write_string('[debug] Override config: ' + repr(overrideArguments) + '\n')
+            write_string('[debug] Override config: ' + repr(override_arguments) + '\n')
     else:
         def compat_conf(conf):
             if sys.version_info < (3,):
@@ -890,13 +890,13 @@ def parseOpts(overrideArguments=None):
                 location = os.path.join(location, 'youtube-dl.conf')
             if not os.path.exists(location):
                 parser.error('config-location %s does not exist.' % location)
-            custom_conf = _readOptions(location)
+            custom_conf = _read_options(location)
         elif '--ignore-config' in command_line_conf:
             pass
         else:
-            system_conf = _readOptions('/etc/youtube-dl.conf')
+            system_conf = _read_options('/etc/youtube-dl.conf')
             if '--ignore-config' not in system_conf:
-                user_conf = _readUserConf()
+                user_conf = _read_user_conf()
 
         argv = system_conf + user_conf + custom_conf + command_line_conf
         opts, args = parser.parse_args(argv)

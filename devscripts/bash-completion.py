@@ -26,5 +26,5 @@ def build_completion(opt_parser):
         f.write(filled_template)
 
 
-parser = youtube_dl.parseOpts()[0]
+parser = youtube_dl.parse_opts()[0]
 build_completion(parser)
