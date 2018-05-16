@@ -232,7 +232,7 @@ def parseOpts(overrideArguments=None):
         '--geo-verification-proxy',
         dest='geo_verification_proxy', default=None, metavar='URL',
         help='Use this proxy to verify the IP address for some geo-restricted sites. '
-        'The default proxy specified by --proxy (or none, if the options is not present) is used for the actual downloading.')
+        'The default proxy specified by --proxy (or none, if the option is not present) is used for the actual downloading.')
     geo.add_option(
         '--cn-verification-proxy',
         dest='cn_verification_proxy', default=None, metavar='URL',
@@ -249,6 +249,10 @@ def parseOpts(overrideArguments=None):
         '--geo-bypass-country', metavar='CODE',
         dest='geo_bypass_country', default=None,
         help='Force bypass geographic restriction with explicitly provided two-letter ISO 3166-2 country code (experimental)')
+    geo.add_option(
+        '--geo-bypass-ip-block', metavar='IP_BLOCK',
+        dest='geo_bypass_ip_block', default=None,
+        help='Force bypass geographic restriction with explicitly provided IP block in CIDR notation (experimental)')
 
     selection = optparse.OptionGroup(parser, 'Video Selection')
     selection.add_option(
@@ -676,7 +680,8 @@ def parseOpts(overrideArguments=None):
     filesystem.add_option(
         '-a', '--batch-file',
         dest='batchfile', metavar='FILE',
-        help='File containing URLs to download (\'-\' for stdin)')
+        help="File containing URLs to download ('-' for stdin), one URL per line. "
+             "Lines starting with '#', ';' or ']' are considered as comments and ignored.")
     filesystem.add_option(
         '--id', default=False,
         action='store_true', dest='useid', help='Use only video ID in file name')

@@ -122,6 +122,7 @@
  - **BRMediathek**: Bayerischer Rundfunk Mediathek
  - **bt:article**: Bergens Tidende Articles
  - **bt:vestlendingen**: Bergens Tidende - Vestlendingen
+ - **BusinessInsider**
  - **BuzzFeed**
  - **BYUtv**
  - **Camdemy**
@@ -135,6 +136,7 @@
  - **CarambaTVPage**
  - **CartoonNetwork**
  - **cbc.ca**
+ - **cbc.ca:olympics**
  - **cbc.ca:player**
  - **cbc.ca:watch**
  - **cbc.ca:watch:video**
@@ -162,6 +164,7 @@
  - **ClipRs**
  - **Clipsyndicate**
  - **CloserToTruth**
+ - **CloudflareStream**
  - **cloudtime**: CloudTime
  - **Cloudy**
  - **Clubic**
@@ -189,7 +192,7 @@
  - **CSpan**: C-SPAN
  - **CtsNews**: 華視新聞
  - **CTVNews**
- - **culturebox.francetvinfo.fr**
+ - **Culturebox**
  - **CultureUnplugged**
  - **curiositystream**
  - **curiositystream:collection**
@@ -256,7 +259,6 @@
  - **ESPN**
  - **ESPNArticle**
  - **EsriVideo**
- - **ETOnline**
  - **Europa**
  - **EveryonesMixtape**
  - **ExpoTV**
@@ -291,11 +293,14 @@
  - **FranceTV**
  - **FranceTVEmbed**
  - **francetvinfo.fr**
+ - **FranceTVJeunesse**
+ - **FranceTVSite**
  - **Freesound**
  - **freespeech.org**
  - **FreshLive**
  - **Funimation**
- - **Funk**
+ - **FunkChannel**
+ - **FunkMix**
  - **FunnyOrDie**
  - **Fusion**
  - **Fux**
@@ -333,6 +338,7 @@
  - **HentaiStigma**
  - **hetklokhuis**
  - **hgtv.com:show**
+ - **HiDive**
  - **HistoricFilms**
  - **history:topic**: History.com Topic
  - **hitbox**
@@ -369,6 +375,7 @@
  - **Ir90Tv**
  - **ITTF**
  - **ITV**
+ - **ITVBTCC**
  - **ivi**: ivi.ru
  - **ivi:compilation**: ivi.ru compilations
  - **ivideon**: Ivideon TV
@@ -414,6 +421,7 @@
  - **Lecture2Go**
  - **LEGO**
  - **Lemonde**
+ - **Lenta**
  - **LePlaylist**
  - **LetvCloud**: 乐视云
  - **Libsyn**
@@ -422,6 +430,7 @@
  - **limelight**
  - **limelight:channel**
  - **limelight:channel_list**
+ - **LineTV**
  - **LiTV**
  - **LiveLeak**
  - **LiveLeakEmbed**
@@ -437,6 +446,8 @@
  - **m6**
  - **macgamestore**: MacGameStore trailers
  - **mailru**: Видео@Mail.Ru
+ - **mailru:music**: Музыка@Mail.Ru
+ - **mailru:music:search**: Музыка@Mail.Ru
  - **MakersChannel**
  - **MakerTV**
  - **mangomolo:live**
@@ -502,6 +513,7 @@
  - **MySpass**
  - **Myvi**
  - **MyVidster**
+ - **MyviEmbed**
  - **n-tv.de**
  - **natgeo**
  - **natgeo:episodeguide**
@@ -510,7 +522,8 @@
  - **NBA**
  - **NBC**
  - **NBCNews**
- - **NBCOlympics**
+ - **nbcolympics**
+ - **nbcolympics:stream**
  - **NBCSports**
  - **NBCSportsVPlayer**
  - **ndr**: NDR.de - Norddeutscher Rundfunk
@@ -617,6 +630,8 @@
  - **PhilharmonieDeParis**: Philharmonie de Paris
  - **phoenix.de**
  - **Photobucket**
+ - **Picarto**
+ - **PicartoVod**
  - **Piksel**
  - **Pinkbike**
  - **Pladform**
@@ -655,6 +670,8 @@
  - **qqmusic:playlist**: QQ音乐 - 歌单
  - **qqmusic:singer**: QQ音乐 - 歌手
  - **qqmusic:toplist**: QQ音乐 - 排行榜
+ - **Quickline**
+ - **QuicklineLive**
  - **R7**
  - **R7Article**
  - **radio.de**
@@ -667,6 +684,7 @@
  - **RaiPlay**
  - **RaiPlayLive**
  - **RaiPlayPlaylist**
+ - **RayWenderlich**
  - **RBMARadio**
  - **RDS**: RDS.ca
  - **RedBullTV**
@@ -792,6 +810,7 @@
  - **SunPorno**
  - **SVT**
  - **SVTPlay**: SVT Play and Öppet arkiv
+ - **SVTSeries**
  - **SWRMediathek**
  - **Syfy**
  - **SztvHu**
@@ -815,8 +834,11 @@
  - **Telegraaf**
  - **TeleMB**
  - **TeleQuebec**
+ - **TeleQuebecEmission**
+ - **TeleQuebecLive**
  - **TeleTask**
  - **Telewebion**
+ - **TennisTV**
  - **TF1**
  - **TFO**
  - **TheIntercept**
@@ -872,6 +894,7 @@
  - **TVNoe**
  - **TVNow**
  - **TVNowList**
+ - **TVNowShow**
  - **tvp**: Telewizja Polska
  - **tvp:embed**: Telewizja Polska
  - **tvp:series**
@@ -925,7 +948,6 @@
  - **vice**
  - **vice:article**
  - **vice:show**
- - **Viceland**
  - **Vidbit**
  - **Viddler**
  - **Videa**
@@ -941,6 +963,7 @@
  - **VideoPress**
  - **videoweed**: VideoWeed
  - **Vidio**
+ - **VidLii**
  - **vidme**
  - **vidme:user**
  - **vidme:user:likes**
@@ -1045,6 +1068,7 @@
  - **yandexmusic:album**: Яндекс.Музыка - Альбом
  - **yandexmusic:playlist**: Яндекс.Музыка - Плейлист
  - **yandexmusic:track**: Яндекс.Музыка - Трек
+ - **YapFiles**
  - **YesJapan**
  - **yinyuetai:video**: 音悦Tai
  - **Ynet**
@@ -1073,6 +1097,8 @@
  - **youtube:watchlater**: Youtube watch later list, ":ytwatchlater" for short (requires authentication)
  - **Zapiks**
  - **Zaq1**
+ - **Zattoo**
+ - **ZattooLive**
  - **ZDF**
  - **ZDFChannel**
  - **zingmp3**: mp3.zing.vn

@@ -116,6 +116,9 @@ Alternatively, refer to the [developer instructions](#developer-instructions) fo
     --geo-bypass-country CODE        Force bypass geographic restriction with
                                      explicitly provided two-letter ISO 3166-2
                                      country code (experimental)
+    --geo-bypass-ip-block IP_BLOCK   Force bypass geographic restriction with
+                                     explicitly provided IP block in CIDR
+                                     notation (experimental)
 
 ## Video Selection:
     --playlist-start NUMBER          Playlist video to start at (default is 1)
@@ -223,7 +226,9 @@ Alternatively, refer to the [developer instructions](#developer-instructions) fo
 
 ## Filesystem Options:
     -a, --batch-file FILE            File containing URLs to download ('-' for
-                                     stdin)
+                                     stdin), one URL per line. Lines starting
+                                     with '#', ';' or ']' are considered as
+                                     comments and ignored.
     --id                             Use only video ID in file name
     -o, --output TEMPLATE            Output filename template, see the "OUTPUT
                                      TEMPLATE" for all the info
