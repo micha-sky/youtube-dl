@@ -9,11 +9,30 @@ import sys
 import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from test.helper import FakeYDL, expect_dict, expect_value
-from youtube_dl.compat import compat_etree_fromstring
+from test.helper import FakeYDL, expect_dict, expect_value, http_server_port
+from youtube_dl.compat import compat_etree_fromstring, compat_http_server
 from youtube_dl.extractor.common import InfoExtractor
 from youtube_dl.extractor import YoutubeIE, get_info_extractor
 from youtube_dl.utils import encode_data_uri, strip_jsonp, ExtractorError, RegexNotFoundError
+import threading
+
+
+TEAPOT_RESPONSE_STATUS = 418
+TEAPOT_RESPONSE_BODY = "<h1>418 I'm a teapot</h1>"
+
+
+class InfoExtractorTestRequestHandler(compat_http_server.BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        pass
+
+    def do_GET(self):
+        if self.path == '/teapot':
+            self.send_response(TEAPOT_RESPONSE_STATUS)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(TEAPOT_RESPONSE_BODY.encode())
+        else:
+            assert False
 
 
 class TestIE(InfoExtractor):
@@ -42,6 +61,7 @@ class TestInfoExtractor(unittest.TestCase):
             <meta content='Foo' property=og:foobar>
             <meta name="og:test1" content='foo > < bar'/>
             <meta name="og:test2" content="foo >//< bar"/>
+            <meta property=og-test3 content='Ill-formatted opengraph'/>
             '''
         self.assertEqual(ie._og_search_title(html), 'Foo')
         self.assertEqual(ie._og_search_description(html), 'Some video\'s description ')
@@ -50,6 +70,7 @@ class TestInfoExtractor(unittest.TestCase):
         self.assertEqual(ie._og_search_property('foobar', html), 'Foo')
         self.assertEqual(ie._og_search_property('test1', html), 'foo > < bar')
         self.assertEqual(ie._og_search_property('test2', html), 'foo >//< bar')
+        self.assertEqual(ie._og_search_property('test3', html), 'Ill-formatted opengraph')
         self.assertEqual(ie._og_search_property(('test0', 'test1'), html), 'foo > < bar')
         self.assertRaises(RegexNotFoundError, ie._og_search_property, 'test0', html, None, fatal=True)
         self.assertRaises(RegexNotFoundError, ie._og_search_property, ('test0', 'test00'), html, None, fatal=True)
@@ -180,7 +201,7 @@ jwplayer("mediaplayer").setup({"abouttext":"Visit Indie DB","aboutlink":"http:\/
     def test_parse_m3u8_formats(self):
         _TEST_CASES = [
             (
-                # https://github.com/rg3/youtube-dl/issues/11507
+                # https://github.com/ytdl-org/youtube-dl/issues/11507
                 # http://pluzz.francetv.fr/videos/le_ministere.html
                 'pluzz_francetv_11507',
                 'http://replayftv-vh.akamaihd.net/i/streaming-adaptatif_france-dom-tom/2017/S16/J2/156589847-58f59130c1f52-,standard1,standard2,standard3,standard4,standard5,.mp4.csmil/master.m3u8?caption=2017%2F16%2F156589847-1492488987.m3u8%3Afra%3AFrancais&audiotrack=0%3Afra%3AFrancais',
@@ -242,7 +263,7 @@ jwplayer("mediaplayer").setup({"abouttext":"Visit Indie DB","aboutlink":"http:\/
                 }]
             ),
             (
-                # https://github.com/rg3/youtube-dl/issues/11995
+                # https://github.com/ytdl-org/youtube-dl/issues/11995
                 # http://teamcoco.com/video/clueless-gamer-super-bowl-for-honor
                 'teamcoco_11995',
                 'http://ak.storage-w.teamcococdn.com/cdn/2017-02/98599/ed8f/main.m3u8',
@@ -316,7 +337,7 @@ jwplayer("mediaplayer").setup({"abouttext":"Visit Indie DB","aboutlink":"http:\/
                 }]
             ),
             (
-                # https://github.com/rg3/youtube-dl/issues/12211
+                # https://github.com/ytdl-org/youtube-dl/issues/12211
                 # http://video.toggle.sg/en/series/whoopie-s-world/ep3/478601
                 'toggle_mobile_12211',
                 'http://cdnapi.kaltura.com/p/2082311/sp/208231100/playManifest/protocol/http/entryId/0_89q6e8ku/format/applehttp/tags/mobile_sd/f/a.m3u8',
@@ -478,7 +499,64 @@ jwplayer("mediaplayer").setup({"abouttext":"Visit Indie DB","aboutlink":"http:\/
                     'width': 1280,
                     'height': 720,
                 }]
-            )
+            ),
+            (
+                # https://github.com/ytdl-org/youtube-dl/issues/18923
+                # https://www.ted.com/talks/boris_hesser_a_grassroots_healthcare_revolution_in_africa
+                'ted_18923',
+                'http://hls.ted.com/talks/31241.m3u8',
+                [{
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/audio/600k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '600k-Audio',
+                    'vcodec': 'none',
+                }, {
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/audio/600k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '68',
+                    'vcodec': 'none',
+                }, {
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/video/64k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '163',
+                    'acodec': 'none',
+                    'width': 320,
+                    'height': 180,
+                }, {
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/video/180k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '481',
+                    'acodec': 'none',
+                    'width': 512,
+                    'height': 288,
+                }, {
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/video/320k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '769',
+                    'acodec': 'none',
+                    'width': 512,
+                    'height': 288,
+                }, {
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/video/450k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '984',
+                    'acodec': 'none',
+                    'width': 512,
+                    'height': 288,
+                }, {
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/video/600k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '1255',
+                    'acodec': 'none',
+                    'width': 640,
+                    'height': 360,
+                }, {
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/video/950k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '1693',
+                    'acodec': 'none',
+                    'width': 853,
+                    'height': 480,
+                }, {
+                    'url': 'http://hls.ted.com/videos/BorisHesser_2018S/video/1500k.m3u8?nobumpers=true&uniqueId=76011e2b',
+                    'format_id': '2462',
+                    'acodec': 'none',
+                    'width': 1280,
+                    'height': 720,
+                }]
+            ),
         ]
 
         for m3u8_file, m3u8_url, expected_formats in _TEST_CASES:
@@ -492,9 +570,9 @@ jwplayer("mediaplayer").setup({"abouttext":"Visit Indie DB","aboutlink":"http:\/
     def test_parse_mpd_formats(self):
         _TEST_CASES = [
             (
-                # https://github.com/rg3/youtube-dl/issues/13919
+                # https://github.com/ytdl-org/youtube-dl/issues/13919
                 # Also tests duplicate representation ids, see
-                # https://github.com/rg3/youtube-dl/issues/15111
+                # https://github.com/ytdl-org/youtube-dl/issues/15111
                 'float_duration',
                 'http://unknown/manifest.mpd',
                 [{
@@ -574,7 +652,7 @@ jwplayer("mediaplayer").setup({"abouttext":"Visit Indie DB","aboutlink":"http:\/
                     'height': 1080,
                 }]
             ), (
-                # https://github.com/rg3/youtube-dl/pull/14844
+                # https://github.com/ytdl-org/youtube-dl/pull/14844
                 'urls_only',
                 'http://unknown/manifest.mpd',
                 [{
@@ -670,7 +748,7 @@ jwplayer("mediaplayer").setup({"abouttext":"Visit Indie DB","aboutlink":"http:\/
     def test_parse_f4m_formats(self):
         _TEST_CASES = [
             (
-                # https://github.com/rg3/youtube-dl/issues/14660
+                # https://github.com/ytdl-org/youtube-dl/issues/14660
                 'custom_base_url',
                 'http://api.new.livestream.com/accounts/6115179/events/6764928/videos/144884262.f4m',
                 [{
@@ -742,6 +820,25 @@ jwplayer("mediaplayer").setup({"abouttext":"Visit Indie DB","aboutlink":"http:\/
                 expect_value(self, entries, expected_entries, None)
                 for i in range(len(entries)):
                     expect_dict(self, entries[i], expected_entries[i])
+
+    def test_response_with_expected_status_returns_content(self):
+        # Checks for mitigations against the effects of
+        # <https://bugs.python.org/issue15002> that affect Python 3.4.1+, which
+        # manifest as `_download_webpage`, `_download_xml`, `_download_json`,
+        # or the underlying `_download_webpage_handle` returning no content
+        # when a response matches `expected_status`.
+
+        httpd = compat_http_server.HTTPServer(
+            ('127.0.0.1', 0), InfoExtractorTestRequestHandler)
+        port = http_server_port(httpd)
+        server_thread = threading.Thread(target=httpd.serve_forever)
+        server_thread.daemon = True
+        server_thread.start()
+
+        (content, urlh) = self.ie._download_webpage_handle(
+            'http://127.0.0.1:%d/teapot' % port, None,
+            expected_status=TEAPOT_RESPONSE_STATUS)
+        self.assertEqual(content, TEAPOT_RESPONSE_BODY)
 
 
 if __name__ == '__main__':

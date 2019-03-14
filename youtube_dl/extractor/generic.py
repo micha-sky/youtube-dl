@@ -47,7 +47,7 @@ from .nbc import NBCSportsVPlayerIE
 from .ooyala import OoyalaIE
 from .rutv import RUTVIE
 from .tvc import TVCIE
-from .sportbox import SportBoxEmbedIE
+from .sportbox import SportBoxIE
 from .smotri import SmotriIE
 from .myvi import MyviIE
 from .condenast import CondeNastIE
@@ -108,6 +108,14 @@ from .yapfiles import YapFilesIE
 from .vice import ViceIE
 from .xfileshare import XFileShareIE
 from .cloudflarestream import CloudflareStreamIE
+from .peertube import PeerTubeIE
+from .teachable import TeachableIE
+from .indavideo import IndavideoEmbedIE
+from .apa import APAIE
+from .foxnews import FoxNewsIE
+from .viqeo import ViqeoIE
+from .expressen import ExpressenIE
+from .zype import ZypeIE
 
 
 class GenericIE(InfoExtractor):
@@ -422,7 +430,7 @@ class GenericIE(InfoExtractor):
             },
         },
         {
-            # https://github.com/rg3/youtube-dl/issues/2253
+            # https://github.com/ytdl-org/youtube-dl/issues/2253
             'url': 'http://bcove.me/i6nfkrc3',
             'md5': '0ba9446db037002366bab3b3eb30c88c',
             'info_dict': {
@@ -447,7 +455,7 @@ class GenericIE(InfoExtractor):
             },
         },
         {
-            # https://github.com/rg3/youtube-dl/issues/3541
+            # https://github.com/ytdl-org/youtube-dl/issues/3541
             'add_ie': ['BrightcoveLegacy'],
             'url': 'http://www.kijk.nl/sbs6/leermijvrouwenkennen/videos/jqMiXKAYan2S/aflevering-1',
             'info_dict': {
@@ -911,7 +919,7 @@ class GenericIE(InfoExtractor):
             }
         },
         # Multiple brightcove videos
-        # https://github.com/rg3/youtube-dl/issues/2283
+        # https://github.com/ytdl-org/youtube-dl/issues/2283
         {
             'url': 'http://www.newyorker.com/online/blogs/newsdesk/2014/01/always-never-nuclear-command-and-control.html',
             'info_dict': {
@@ -1389,17 +1397,6 @@ class GenericIE(InfoExtractor):
             'params': {
                 # m3u8 download
                 'skip_download': True,
-            },
-        },
-        # SVT embed
-        {
-            'url': 'http://www.svt.se/sport/ishockey/jagr-tacklar-giroux-under-intervjun',
-            'info_dict': {
-                'id': '2900353',
-                'ext': 'flv',
-                'title': 'Här trycker Jagr till Giroux (under SVT-intervjun)',
-                'duration': 27,
-                'age_limit': 0,
             },
         },
         # Crooks and Liars embed
@@ -2013,6 +2010,50 @@ class GenericIE(InfoExtractor):
             },
         },
         {
+            # PeerTube embed
+            'url': 'https://joinpeertube.org/fr/home/',
+            'info_dict': {
+                'id': 'home',
+                'title': 'Reprenez le contrôle de vos vidéos ! #JoinPeertube',
+            },
+            'playlist_count': 2,
+        },
+        {
+            # Indavideo embed
+            'url': 'https://streetkitchen.hu/receptek/igy_kell_otthon_hamburgert_sutni/',
+            'info_dict': {
+                'id': '1693903',
+                'ext': 'mp4',
+                'title': 'Így kell otthon hamburgert sütni',
+                'description': 'md5:f5a730ecf900a5c852e1e00540bbb0f7',
+                'timestamp': 1426330212,
+                'upload_date': '20150314',
+                'uploader': 'StreetKitchen',
+                'uploader_id': '546363',
+            },
+            'add_ie': [IndavideoEmbedIE.ie_key()],
+            'params': {
+                'skip_download': True,
+            },
+        },
+        {
+            # APA embed via JWPlatform embed
+            'url': 'http://www.vol.at/blue-man-group/5593454',
+            'info_dict': {
+                'id': 'jjv85FdZ',
+                'ext': 'mp4',
+                'title': '"Blau ist mysteriös": Die Blue Man Group im Interview',
+                'description': 'md5:d41d8cd98f00b204e9800998ecf8427e',
+                'thumbnail': r're:^https?://.*\.jpg$',
+                'duration': 254,
+                'timestamp': 1519211149,
+                'upload_date': '20180221',
+            },
+            'params': {
+                'skip_download': True,
+            },
+        },
+        {
             'url': 'http://share-videos.se/auto/video/83645793?uid=13',
             'md5': 'b68d276de422ab07ee1d49388103f457',
             'info_dict': {
@@ -2021,6 +2062,44 @@ class GenericIE(InfoExtractor):
                 'ext': 'mp4'
             },
             'skip': 'TODO: fix nested playlists processing in tests',
+        },
+        {
+            # Viqeo embeds
+            'url': 'https://viqeo.tv/',
+            'info_dict': {
+                'id': 'viqeo',
+                'title': 'All-new video platform',
+            },
+            'playlist_count': 6,
+        },
+        {
+            # Zype embed
+            'url': 'https://www.cookscountry.com/episode/554-smoky-barbecue-favorites',
+            'info_dict': {
+                'id': '5b400b834b32992a310622b9',
+                'ext': 'mp4',
+                'title': 'Smoky Barbecue Favorites',
+                'thumbnail': r're:^https?://.*\.jpe?g',
+            },
+            'add_ie': [ZypeIE.ie_key()],
+            'params': {
+                'skip_download': True,
+            },
+        },
+        {
+            # videojs embed
+            'url': 'https://video.sibnet.ru/shell.php?videoid=3422904',
+            'info_dict': {
+                'id': 'shell',
+                'ext': 'mp4',
+                'title': 'Доставщик пиццы спросил разрешения сыграть на фортепиано',
+                'description': 'md5:89209cdc587dab1e4a090453dbaa2cb1',
+                'thumbnail': r're:^https?://.*\.jpg$',
+            },
+            'params': {
+                'skip_download': True,
+            },
+            'expected_warnings': ['Failed to download MPD manifest'],
         },
         # {
         #     # TODO: find another test
@@ -2118,10 +2197,7 @@ class GenericIE(InfoExtractor):
 
     def _real_extract(self, url):
         if url.startswith('//'):
-            return {
-                '_type': 'url',
-                'url': self.http_scheme() + url,
-            }
+            return self.url_result(self.http_scheme() + url)
 
         parsed_url = compat_urlparse.urlparse(url)
         if not parsed_url.scheme:
@@ -2295,7 +2371,7 @@ class GenericIE(InfoExtractor):
             return camtasia_res
 
         # Sometimes embedded video player is hidden behind percent encoding
-        # (e.g. https://github.com/rg3/youtube-dl/issues/2448)
+        # (e.g. https://github.com/ytdl-org/youtube-dl/issues/2448)
         # Unescaping the whole page allows to handle those cases in a generic way
         webpage = compat_urllib_parse_unquote(webpage)
 
@@ -2573,9 +2649,9 @@ class GenericIE(InfoExtractor):
             return self.url_result(tvc_url, 'TVC')
 
         # Look for embedded SportBox player
-        sportbox_urls = SportBoxEmbedIE._extract_urls(webpage)
+        sportbox_urls = SportBoxIE._extract_urls(webpage)
         if sportbox_urls:
-            return self.playlist_from_matches(sportbox_urls, video_id, video_title, ie='SportBoxEmbed')
+            return self.playlist_from_matches(sportbox_urls, video_id, video_title, ie=SportBoxIE.ie_key())
 
         # Look for embedded XHamster player
         xhamster_urls = XHamsterEmbedIE._extract_urls(webpage)
@@ -2960,7 +3036,7 @@ class GenericIE(InfoExtractor):
                 wapo_urls, video_id, video_title, ie=WashingtonPostIE.ie_key())
 
         # Look for Mediaset embeds
-        mediaset_urls = MediasetIE._extract_urls(webpage)
+        mediaset_urls = MediasetIE._extract_urls(self, webpage)
         if mediaset_urls:
             return self.playlist_from_matches(
                 mediaset_urls, video_id, video_title, ie=MediasetIE.ie_key())
@@ -3029,12 +3105,51 @@ class GenericIE(InfoExtractor):
             return self.playlist_from_matches(
                 cloudflarestream_urls, video_id, video_title, ie=CloudflareStreamIE.ie_key())
 
-        sharevideos_urls = [mobj.group('url') for mobj in re.finditer(
+        peertube_urls = PeerTubeIE._extract_urls(webpage, url)
+        if peertube_urls:
+            return self.playlist_from_matches(
+                peertube_urls, video_id, video_title, ie=PeerTubeIE.ie_key())
+
+        teachable_url = TeachableIE._extract_url(webpage, url)
+        if teachable_url:
+            return self.url_result(teachable_url)
+
+        indavideo_urls = IndavideoEmbedIE._extract_urls(webpage)
+        if indavideo_urls:
+            return self.playlist_from_matches(
+                indavideo_urls, video_id, video_title, ie=IndavideoEmbedIE.ie_key())
+
+        apa_urls = APAIE._extract_urls(webpage)
+        if apa_urls:
+            return self.playlist_from_matches(
+                apa_urls, video_id, video_title, ie=APAIE.ie_key())
+
+        foxnews_urls = FoxNewsIE._extract_urls(webpage)
+        if foxnews_urls:
+            return self.playlist_from_matches(
+                foxnews_urls, video_id, video_title, ie=FoxNewsIE.ie_key())
+
+        sharevideos_urls = [sharevideos_mobj.group('url') for sharevideos_mobj in re.finditer(
             r'<iframe[^>]+?\bsrc\s*=\s*(["\'])(?P<url>(?:https?:)?//embed\.share-videos\.se/auto/embed/\d+\?.*?\buid=\d+.*?)\1',
             webpage)]
         if sharevideos_urls:
             return self.playlist_from_matches(
                 sharevideos_urls, video_id, video_title)
+
+        viqeo_urls = ViqeoIE._extract_urls(webpage)
+        if viqeo_urls:
+            return self.playlist_from_matches(
+                viqeo_urls, video_id, video_title, ie=ViqeoIE.ie_key())
+
+        expressen_urls = ExpressenIE._extract_urls(webpage)
+        if expressen_urls:
+            return self.playlist_from_matches(
+                expressen_urls, video_id, video_title, ie=ExpressenIE.ie_key())
+
+        zype_urls = ZypeIE._extract_urls(webpage)
+        if zype_urls:
+            return self.playlist_from_matches(
+                zype_urls, video_id, video_title, ie=ZypeIE.ie_key())
 
         # Look for HTML5 media
         entries = self._parse_html5_media_entries(url, webpage, video_id, m3u8_id='hls')
@@ -3057,9 +3172,13 @@ class GenericIE(InfoExtractor):
         jwplayer_data = self._find_jwplayer_data(
             webpage, video_id, transform_source=js_to_json)
         if jwplayer_data:
-            info = self._parse_jwplayer_data(
-                jwplayer_data, video_id, require_title=False, base_url=url)
-            return merge_dicts(info, info_dict)
+            try:
+                info = self._parse_jwplayer_data(
+                    jwplayer_data, video_id, require_title=False, base_url=url)
+                return merge_dicts(info, info_dict)
+            except ExtractorError:
+                # See https://github.com/ytdl-org/youtube-dl/pull/16735
+                pass
 
         # Video.js embed
         mobj = re.search(
